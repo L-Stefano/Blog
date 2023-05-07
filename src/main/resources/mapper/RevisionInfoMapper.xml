@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.site.blog.dao.RevisionInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.site.blog.entity.RevisionInfo">
+            <id property="revision_info_id" column="revision_info_id" jdbcType="BIGINT"/>
+            <result property="revision_datetime" column="revision_datetime" jdbcType="TIMESTAMP"/>
+            <result property="revision_content" column="revision_content" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        revision_info_id,revision_datetime,revision_content
+    </sql>
+</mapper>
