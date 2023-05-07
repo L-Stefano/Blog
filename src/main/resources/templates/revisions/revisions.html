@@ -40,46 +40,51 @@
 <script th:inline="javascript">
     layui.use(function () {
         var flow = layui.flow;
-        var revisionInfoList= [[${revisionInfoList}]];
+        var revisionInfoList = [[${revisionInfoList}]];
         var pageSingleSize = [[${pageSingleSize}]];
-        var pageTotalSize = [[${pageTotalSize}]];
+        var pageTotalSize = Math.ceil(revisionInfoList.length / pageSingleSize); // 计算总页数
 
-        // 流加载实例
         flow.load({
-            elem: '#revision-flow', // 流加载容器
-            isAuto: false,
+            elem: '#revision-flow',
+            isAuto: true,
 
-            done: function (page, next) { // 执行下一页的回调
-                // 模拟数据插入
+            done: function (page, next) {
                 setTimeout(function () {
+                    var start = (page - 1) * pageSingleSize; // 计算当前页数据的起始下标
+                    var end = start + pageSingleSize; // 计算当前页数据的结束下标
+                    var pageData = revisionInfoList.slice(start, end); // 获取当前页数据
                     var lis = [];
-                    for (var i = 0; i < pageSingleSize; i++) {
-                        var datetime=revisionInfoList[i].revisionDatetime;
-                        var content=revisionInfoList[i].revisionContent;
-                        lis.push("content");
-
+                    for (var i = 0; i < pageData.length; i++) {
+                        var datetime = pageData[i].revisionDatetime;
+                        lis.push(
+                            '<div style="padding: 32px;">',
+                            '  <fieldset class="layui-elem-field layui-field-title">',
+                            '    <legend>' + datetime + '</legend>',
+                            '  </fieldset>',
+                            '  <article id="test-markdown-view' + (start + i + 1) + '"></article>',
+                            '</div>'
+                        );
                     }
-
-                    // 执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
-                    // pages 为 Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
-                    next(lis.join(''), page < 10); // 此处假设总页数为 10
+                    next(lis.join(''), page < pageTotalSize);
+                    // 在next回调之后再填充article内容
+                    // 这样才能确保所有的 DOM 元素都已经被添加到了文档中
+                    for (var i = 0; i < pageSingleSize; i++) {
+                        var content = revisionInfoList[start + i].revisionContent;
+                        editormd.markdownToHTML("test-markdown-view" + (start + i + 1), {
+                            htmlDecode: "style,script,iframe",
+                            emoji: true,
+                            taskList: true,
+                            tex: true,
+                            flowChart: true,
+                            sequenceDiagram: true,
+                            markdown: content
+                        });
+                    }
                 }, 520);
             }
         });
-
     });
 </script>
-<script th:inline="javascript">
-    testEditormdView = editormd.markdownToHTML("test-markdown-view"+(i+1), {
-        htmlDecode: "style,script,iframe",
-        emoji: true,
-        taskList: true,
-        tex: true,
-        flowChart: true,
-        sequenceDiagram: true,
-        markdown: content
-    });
 
-</script>
 </body>
 </html>

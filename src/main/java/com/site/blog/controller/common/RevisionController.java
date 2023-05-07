@@ -25,7 +25,7 @@ public class RevisionController
 
     /**
      * 更新历史；版本记录
-     * 前端流加载
+     * 前端进行流加载
      *
      * @param request
      * @return
@@ -41,13 +41,9 @@ public class RevisionController
 
         //每页显示数
         int pageSingleSize = 2;
-        //记录总数作为page size
-        int pageTotalSize = revisionInfoList.size();
-
 
         request.setAttribute("revisionInfoList",revisionInfoList);//所有版本记录传给前端
         request.setAttribute("pageSingleSize",pageSingleSize);//每页显示数
-        request.setAttribute("pageTotalSize",pageTotalSize);//page size
         request.setAttribute("configurations", blogConfigService.getAllConfigs());
         request.setAttribute("pageName", "更新历史");
         return "revisions/revisions.html";
