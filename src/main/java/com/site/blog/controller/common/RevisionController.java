@@ -40,7 +40,7 @@ public class RevisionController
         List<RevisionInfo> revisionInfoList = revisionInfoService.list(queryWrapper);
 
         //每页显示数
-        int pageSingleSize = 2;
+        int pageSingleSize = 4;
 
         request.setAttribute("revisionInfoList",revisionInfoList);//所有版本记录传给前端
         request.setAttribute("pageSingleSize",pageSingleSize);//每页显示数

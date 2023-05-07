@@ -191,6 +191,7 @@ public class MyBlogController {
     public String detail(HttpServletRequest request, @PathVariable("blogId") Long blogId) {
         // 获得文章info
         BlogInfo blogInfo = blogInfoService.getById(blogId);
+        blogInfo.setEnableComment(0);
         List<BlogTagRelation> blogTagRelations = blogTagRelationService.list(new QueryWrapper<BlogTagRelation>()
                 .lambda()
                 .eq(BlogTagRelation::getBlogId, blogId));
