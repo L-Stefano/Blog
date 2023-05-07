@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html>
+<head>
+    <title th:text="${configurations.get('websiteName')}+' | '+${pageName}">更新历史</title>
+    <meta name="description" th:content="${configurations.get('websiteDescription')}">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" th:href="@{${configurations.get('websiteIcon')}}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/X-admin/lib/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/blog/amaze/css/base.css}">
+
+    <style>
+        img {
+            max-width: 45%;
+            height: auto;
+            padding: 8px;
+            margin: 8px;
+        }
+
+        .bigImg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            /*图片向左移动自身宽度的50%, 向上移动自身高度的50%。*/
+            transform: translate(-50%, -50%);
+        }
+
+        /*遮罩层*/
+        .opacityBottom {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            top: 0;
+            left: 0;
+        }
+        .enlarge {
+            cursor: zoom-in;
+        }
+    </style>
+</head>
+
+<body>
+<div th:replace="blog/amaze/header::nav-fragment"></div>
+<header th:fragment="header-fragment" class="intro-header"
+        th:style="'background-image:url(' + @{/blog/amaze/images/header.jpg} + ');' + '-webkit-mask: no-repeat center / contain;
+    -webkit-mask: no-repeat center / contain;
+    -webkit-mask-image: url(/blog/amaze/images/wave.svg);
+    -webkit-mask-size: cover;
+    -webkit-mask-position: top;
+'">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1 th:text="作品集"></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div class="am-g am-g-fixed blog-fixed">
+    <div class="am-u-lg-8 am-u-sm-12">
+        <section>
+            <div class="sidebar-header">
+                <span class="sidebar-header-title">
+                    摄影作品
+                </span>
+            </div>
+            <div>
+                <div class="layui-panel">
+                    <div style="padding: 32px;display: block;text-align: center;">
+                        <img class="enlarge" src="gallery/photos/flows.jpg">
+                        <img class="enlarge" src="gallery/photos/flows.jpg">
+                        <img class="enlarge" src="gallery/photos/flows.jpg">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <div th:fragment="side-fragment" class="am-u-lg-4 am-u-sm-12 am-u-lg-offset-0 am-u-sm-offset-0 sidebar-container">
+        <section>
+            <section>
+                <div class="sidebar-header">
+                <span class="sidebar-header-title">
+                    原创音乐
+                </span>
+                </div>
+                <div>
+                    <blockquote class="layui-elem-quote layui-quote-nm">
+                        作者主要擅长纯音乐的创作，音乐风格涵盖爵士、后摇和新世纪等多种类型；尤其善于运用传统乐器进行配器创作。
+                    </blockquote>
+                    <p>由作者精心挑选的10首最满意的音乐作品，请欣赏：</p>
+                    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=340 height=450
+                            src="//music.163.com/outchain/player?type=0&id=8405948278&auto=1&height=430"></iframe>
+                </div>
+            </section>
+
+
+        </section>
+    </div>
+</div>
+
+
+<footer th:replace="blog/amaze/footer::footer-fragment"></footer>
+<script th:src="@{/blog/plugins/jquery/jquery.min.js}"></script>
+<script src="/X-admin/editormd/lib/marked.min.js"></script>
+<script src="/X-admin/editormd/lib/prettify.min.js"></script>
+<script src="/X-admin/editormd/lib/raphael.min.js"></script>
+<script src="/X-admin/editormd/lib/underscore.min.js"></script>
+<script src="/X-admin/editormd/lib/sequence-diagram.min.js"></script>
+<script src="/X-admin/editormd/lib/flowchart.min.js"></script>
+<script src="/X-admin/editormd/lib/jquery.flowchart.min.js"></script>
+<script src="/X-admin/editormd/src/editormd.js"></script>
+<script th:src="@{/blog/plugins/comment/valid.js}"></script>
+<script th:src="@{/X-admin/lib/layui/layui.all.js}"></script>
+<script th:src="@{/X-admin/lib/layui/js/layui.js}"></script>
+<!--<script th:inline="javascript">-->
+<!--    layui.use(function () {-->
+<!--        var flow = layui.flow;-->
+<!--        var revisionInfoList = [[${revisionInfoList}]];-->
+<!--        var pageSingleSize = [[${pageSingleSize}]];-->
+<!--        var pageTotalSize = Math.ceil(revisionInfoList.length / pageSingleSize); // 计算总页数-->
+
+<!--        flow.load({-->
+<!--            elem: '#revision-flow',-->
+<!--            isAuto: true,-->
+
+<!--            done: function (page, next) {-->
+<!--                setTimeout(function () {-->
+<!--                    var start = (page - 1) * pageSingleSize; // 计算当前页数据的起始下标-->
+<!--                    var end = start + pageSingleSize; // 计算当前页数据的结束下标-->
+<!--                    var pageData = revisionInfoList.slice(start, end); // 获取当前页数据-->
+<!--                    var lis = [];-->
+<!--                    for (var i = 0; i < pageData.length; i++) {-->
+<!--                        var datetime = pageData[i].revisionDatetime;-->
+<!--                        lis.push(-->
+<!--                            '<div style="padding: 32px;">',-->
+<!--                            '  <fieldset class="layui-elem-field layui-field-title">',-->
+<!--                            '    <legend>' + datetime + '</legend>',-->
+<!--                            '  </fieldset>',-->
+<!--                            '  <article id="test-markdown-view' + (start + i + 1) + '"></article>',-->
+<!--                            '</div>'-->
+<!--                        );-->
+<!--                    }-->
+<!--                    next(lis.join(''), page < pageTotalSize);-->
+<!--                    // 在next回调之后再填充article内容-->
+<!--                    // 这样才能确保所有的 DOM 元素都已经被添加到了文档中-->
+<!--                    for (var i = 0; i < pageSingleSize; i++) {-->
+<!--                        var content = revisionInfoList[start + i].revisionContent;-->
+<!--                        editormd.markdownToHTML("test-markdown-view" + (start + i + 1), {-->
+<!--                            htmlDecode: "style,script,iframe",-->
+<!--                            emoji: true,-->
+<!--                            taskList: true,-->
+<!--                            tex: true,-->
+<!--                            flowChart: true,-->
+<!--                            sequenceDiagram: true,-->
+<!--                            markdown: content-->
+<!--                        });-->
+<!--                    }-->
+<!--                }, 520);-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+<script>
+    $('.enlarge').click(function () {
+        //获取图片路径
+        var imgsrc = $(this).attr("src");
+        var opacityBottom = '<div class="opacityBottom" style = "display:none"><img class="bigImg" src="' + imgsrc + '"></div>';
+        $(document.body).append(opacityBottom);
+        toBigImg();//变大函数
+    });
+
+    function toBigImg() {
+        $(".opacityBottom").addClass("opacityBottom");//添加遮罩层
+        $(".opacityBottom").show();
+        $("html,body").addClass("none-scroll");//下层不可滑动
+        $(".bigImg").addClass("bigImg");//添加图片样式
+        $(".opacityBottom").click(function () {//点击关闭
+            $("html,body").removeClass("none-scroll");
+            $(".opacityBottom").remove();
+        });
+    }
+
+
+
+</script>
+</body>
+</html>
