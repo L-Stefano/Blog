@@ -44,14 +44,16 @@
             <div class="layui-card">
                 <div class="layui-card-body ">
                     <form class="layui-form layui-col-space5">
-                        <input th:if="${blogInfo!=null}" type="hidden" name="blogId" th:value="${blogInfo?.blogId}">
+                        <input th:if="${revisionInfo!=null}" type="hidden" name="revisionId"
+                               th:value="${revisionInfo?.revisionId}">
 
                         <div class="layui-inline">
                             <label class="layui-form-label">版本更新时间：</label>
                             <div class="layui-input-block">
                                 <input type="text" name="revisionDatetime" placeholder="格式：yyyy-MM-dd HH:mm:ss"
                                        autocomplete="off"
-                                       class="layui-input" lay-verify="required">
+                                       class="layui-input" lay-verify="required"
+                                       th:value="${#dates.format(revisionInfo?.revisionDatetime, 'yyyy-MM-dd HH:mm:ss')}">
                             </div>
                         </div>
 
@@ -62,7 +64,9 @@
                             </button>
                         </div>
                         <div class="form-group" id="blog-editormd">
-                            <textarea name="revisionContent" style="display:none;"></textarea>
+                            <textarea name="revisionContent" style="display:none;"
+                                      th:utext="${revisionInfo!=null and revisionInfo.revisionContent !=null}?${revisionInfo.revisionContent}: ''"></textarea>
+
                         </div>
                     </form>
                 </div>
@@ -74,16 +78,19 @@
 <script type="text/javascript" th:src="@{/X-admin/editormd/src/editormd.js}"></script>
 <script th:inline="javascript">
     // 获取当前时间并格式化
-    var now = new Date();
-    var year = now.getFullYear();
-    var month = (now.getMonth() + 1).toString().padStart(2, '0');
-    var day = now.getDate().toString().padStart(2, '0');
-    var hour = now.getHours().toString().padStart(2, '0');
-    var minute = now.getMinutes().toString().padStart(2, '0');
-    var second = now.getSeconds().toString().padStart(2, '0');
-    var formattedDateTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
     var inputElement = document.querySelector('input[name="revisionDatetime"]');
-    inputElement.value = formattedDateTime;
+    if (!inputElement.value) {
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = (now.getMonth() + 1).toString().padStart(2, '0');
+        var day = now.getDate().toString().padStart(2, '0');
+        var hour = now.getHours().toString().padStart(2, '0');
+        var minute = now.getMinutes().toString().padStart(2, '0');
+        var second = now.getSeconds().toString().padStart(2, '0');
+        var formattedDateTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+        inputElement.value = formattedDateTime;
+    }
+
 
     layui.use(['form', 'layer'], function () {
         var layer = layui.layer,
@@ -102,7 +109,8 @@
         });
 
         form.on("submit(submit)", function (data) {
-            var datas = data.field;
+            var datas = data.field
+
 
             var index = top.layer.msg('数据提交中，请稍候', {icon: 16, time: false, shade: 0.8});
             console.log(datas);
