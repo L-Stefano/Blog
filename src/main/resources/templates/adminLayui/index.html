@@ -27,31 +27,9 @@
             <div class="logo">
                 <a href="./index">v1&nbsp;blog</a></div>
             <div class="left_open">
-                <a><i title="展开左侧栏" class="iconfont">&#xe699;</i></a>
+                <a><i title="隐藏/展开左侧导航栏" class="iconfont">&#xe699;</i></a>
             </div>
-            <ul class="layui-nav left fast-add" lay-filter="">
-                <li class="layui-nav-item">
-                    <a href="javascript:;">+新增</a>
-                    <dl class="layui-nav-child">
-                        <!-- 二级菜单 -->
-                        <dd>
-                            <a onclick="xadmin.open('最大化','http://www.baidu.com','','',true)">
-                                <i class="iconfont">&#xe6a2;</i>弹出最大化</a></dd>
-                        <dd>
-                            <a onclick="xadmin.open('弹出自动宽高','http://www.baidu.com')">
-                                <i class="iconfont">&#xe6a8;</i>弹出自动宽高</a></dd>
-                        <dd>
-                            <a onclick="xadmin.open('弹出指定宽高','http://www.baidu.com',500,300)">
-                                <i class="iconfont">&#xe6a8;</i>弹出指定宽高</a></dd>
-                        <dd>
-                            <a onclick="xadmin.add_tab('在tab打开','member-list.html')">
-                                <i class="iconfont">&#xe6b8;</i>在tab打开</a></dd>
-                        <dd>
-                            <a onclick="xadmin.add_tab('在tab打开刷新','member-del.html',true)">
-                                <i class="iconfont">&#xe6b8;</i>在tab打开刷新</a></dd>
-                    </dl>
-                </li>
-            </ul>
+
             <ul class="layui-nav right" lay-filter="">
                 <li class="layui-nav-item">
                     <a href="javascript:;" th:text="${session.loginNickName}"></a>
@@ -100,7 +78,7 @@
                     </li>
                     <li>
                         <a href="javascript:;">
-                            <i class="iconfont left-nav-li" lay-tips="订单管理">&#xe723;</i>
+                            <i class="iconfont left-nav-li" lay-tips="标签管理">&#xe723;</i>
                             <cite>标签管理</cite>
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
@@ -126,7 +104,7 @@
                     </li>
                     <li>
                         <a href="javascript:;">
-                            <i class="iconfont left-nav-li" lay-tips="系统统计">&#xe6ce;</i>
+                            <i class="iconfont left-nav-li" lay-tips="系统管理">&#xe6ce;</i>
                             <cite>系统管理</cite>
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
@@ -134,6 +112,16 @@
                                 <a onclick="xadmin.add_tab('系统信息','/admin/v1/blogConfig')">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>系统信息</cite></a>
+                            </li>
+                            <li>
+                                <a onclick="xadmin.add_tab('添加更新记录','/admin/v1/revisionAddition')">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>添加更新记录</cite></a>
+                            </li>
+                            <li>
+                                <a onclick="xadmin.add_tab('管理更新记录','/admin/v1/revisionManagement')">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>管理更新记录</cite></a>
                             </li>
                             <li>
                                 <a onclick="xadmin.add_tab('链接列表','/admin/v1/linkType')">
