@@ -273,10 +273,13 @@
     // 获取点赞按钮元素
     const likeBtn = document.getElementById('likeBtn');
 
-    // 设置点赞状态的本地存储键名
-    const likeKey = 'myAppLikeStatus';
+    // 获取文章的唯一标识符，例如文章 ID
+    const blogId = document.getElementById('blogId').value;
 
-    // 检查设备是否已经点过赞
+    // 设置点赞状态的本地存储键名
+    const likeKey = 'myAppLikeStatus-' + blogId;
+
+    // 检查设备是否已经对这篇文章点过赞
     if (localStorage.getItem(likeKey)) {
         // 如果已经点过赞，禁用点赞按钮
         likeBtn.style.pointerEvents = 'none';
