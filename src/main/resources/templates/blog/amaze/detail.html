@@ -96,19 +96,19 @@
                 <label class="layui-form-label">昵称</label>
                 <div class="layui-input-block">
                     <input type="hidden" id="blogId" autocomplete="off" th:value="${blogDetailVO.blogId}"/>
-                    <input type="text" id="commentator" autocomplete="off" placeholder="必填,1-6个字符" class="layui-input">
+                    <input type="text" id="commentator" autocomplete="off" placeholder="1-6个字符" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">邮箱</label>
                 <div class="layui-input-block">
-                    <input type="text" id="email" autocomplete="off" placeholder="可不填" class="layui-input">
+                    <input type="text" id="email" autocomplete="off" placeholder="选填" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">评论内容</label>
                 <div class="layui-input-block">
-                    <textarea id="commentBody" placeholder="评论内容需经过作者审核方可显示" class="layui-textarea"></textarea>
+                    <textarea id="commentBody" placeholder="评论内容需经过作者审核方可显示。" class="layui-textarea"></textarea>
                 </div>
             </div>
             <div class="layui-form-item">
