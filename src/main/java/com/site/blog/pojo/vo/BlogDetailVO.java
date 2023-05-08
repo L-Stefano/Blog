@@ -28,6 +28,18 @@ public class BlogDetailVO {
 
     private Date createTime;
 
+    public Long getBlogLikeCount()
+    {
+        return blogLikeCount;
+    }
+
+    public void setBlogLikeCount(Long blogLikeCount)
+    {
+        this.blogLikeCount = blogLikeCount;
+    }
+
+    private Long blogLikeCount;
+
     public Long getBlogId() {
         return blogId;
     }

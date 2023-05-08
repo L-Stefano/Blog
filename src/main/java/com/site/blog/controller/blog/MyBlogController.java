@@ -22,17 +22,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -43,7 +37,8 @@ import java.util.stream.Collectors;
  * @date 2020/12/7
  */
 @Controller
-public class MyBlogController {
+public class MyBlogController
+{
 
     public static String theme = "amaze";
 
@@ -67,12 +62,14 @@ public class MyBlogController {
 
     /**
      * 博客首页
+     *
      * @param request
      * @author Linn-cn
      * @date 2020/12/7
      */
     @GetMapping({"/", "/index", "index.html"})
-    public String index(HttpServletRequest request) {
+    public String index(HttpServletRequest request)
+    {
         return this.page(request, new BlogPageCondition()
                 .setPageNum(1)
                 .setPageName("首页")
@@ -88,7 +85,8 @@ public class MyBlogController {
      * @date 2020/12/7
      */
     @GetMapping({"/category/{categoryName}"})
-    public String category(HttpServletRequest request, @PathVariable("categoryName") String categoryName) {
+    public String category(HttpServletRequest request, @PathVariable("categoryName") String categoryName)
+    {
         return this.page(request, new BlogPageCondition()
                 .setPageNum(1)
                 .setPageName("分类")
@@ -104,7 +102,8 @@ public class MyBlogController {
      * @date 2019/9/6 7:03
      */
     @GetMapping({"/search/{keyword}"})
-    public String search(HttpServletRequest request, @PathVariable("keyword") String keyword) {
+    public String search(HttpServletRequest request, @PathVariable("keyword") String keyword)
+    {
         return this.page(request, new BlogPageCondition()
                 .setPageNum(1)
                 .setPageName("首页")
@@ -121,7 +120,8 @@ public class MyBlogController {
      * @date 2019/9/6 7:04
      */
     @GetMapping({"/tag/{tagId}"})
-    public String tag(HttpServletRequest request, @PathVariable("tagId") String tagId) {
+    public String tag(HttpServletRequest request, @PathVariable("tagId") String tagId)
+    {
         return this.page(request, new BlogPageCondition()
                 .setPageNum(1)
                 .setPageName("标签")
@@ -132,6 +132,7 @@ public class MyBlogController {
     /**
      * 博客分页
      * Stefano：新增isHidden判断
+     *
      * @param request
      * @param condition
      * @throws
@@ -139,11 +140,14 @@ public class MyBlogController {
      * @date 2020/12/7
      */
     @GetMapping({"/page"})
-    public String page(HttpServletRequest request, BlogPageCondition condition) {
-        if (Objects.isNull(condition.getPageNum())) {
+    public String page(HttpServletRequest request, BlogPageCondition condition)
+    {
+        if (Objects.isNull(condition.getPageNum()))
+        {
             condition.setPageNum(1);
         }
-        if (Objects.isNull(condition.getPageSize())) {
+        if (Objects.isNull(condition.getPageSize()))
+        {
             condition.setPageSize(5);
         }
         Page<BlogInfo> page = new Page<>(condition.getPageNum(), condition.getPageSize());
@@ -153,23 +157,28 @@ public class MyBlogController {
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
                 .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
                 .eq(BlogInfo::getIsHidden, HiddenStatusEnum.NO_DELETED.getStatus());
-        if (Objects.nonNull(condition.getTagId())) {
+        if (Objects.nonNull(condition.getTagId()))
+        {
             List<BlogTagRelation> list = blogTagRelationService.list(new QueryWrapper<BlogTagRelation>()
                     .lambda().eq(BlogTagRelation::getTagId, condition.getTagId()));
-            if (!CollectionUtils.isEmpty(list)) {
+            if (!CollectionUtils.isEmpty(list))
+            {
                 sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogTagRelation::getBlogId).toArray());
             }
         }
         sqlWrapper.orderByDesc(BlogInfo::getCreateTime);
         blogInfoService.page(page, sqlWrapper);
         PageResult blogPageResult = new PageResult(page.getRecords(), page.getTotal(), condition.getPageSize(), condition.getPageNum());
-        if (Objects.nonNull(condition.getKeyword())) {
+        if (Objects.nonNull(condition.getKeyword()))
+        {
             request.setAttribute("keyword", condition.getKeyword());
         }
-        if (Objects.nonNull(condition.getTagId())) {
+        if (Objects.nonNull(condition.getTagId()))
+        {
             request.setAttribute("tagId", condition.getTagId());
         }
-        if (Objects.nonNull(condition.getCategoryName())) {
+        if (Objects.nonNull(condition.getCategoryName()))
+        {
             request.setAttribute("categoryName", condition.getCategoryName());
         }
         request.setAttribute("blogPageResult", blogPageResult);
@@ -183,9 +192,11 @@ public class MyBlogController {
         List<String> headerImgs = new ArrayList<>();
         String headerImgDir = "src/main/resources/static/blog/amaze/images/headers";
         File[] headerImgFiles = new File(headerImgDir).listFiles();
-        for (File headerImgFile : headerImgFiles) {
+        for (File headerImgFile : headerImgFiles)
+        {
             String photoName = headerImgFile.getName();
-            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$")) {
+            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$"))
+            {
                 headerImgs.add(photoName);
             }
         }
@@ -204,7 +215,8 @@ public class MyBlogController {
      * @date 2019/9/6 13:09
      */
     @GetMapping({"/blog/{blogId}", "/article/{blogId}"})
-    public String detail(HttpServletRequest request, @PathVariable("blogId") Long blogId) {
+    public String detail(HttpServletRequest request, @PathVariable("blogId") Long blogId)
+    {
         // 获得文章info
         BlogInfo blogInfo = blogInfoService.getById(blogId);
         List<BlogTagRelation> blogTagRelations = blogTagRelationService.list(new QueryWrapper<BlogTagRelation>()
@@ -217,7 +229,8 @@ public class MyBlogController {
         // 获得关联的标签列表
         List<Integer> tagIds;
         List<BlogTag> tagList = new ArrayList<>();
-        if (!blogTagRelations.isEmpty()) {
+        if (!blogTagRelations.isEmpty())
+        {
             tagIds = blogTagRelations.stream()
                     .map(BlogTagRelation::getTagId).collect(Collectors.toList());
             tagList = blogTagService.list(new QueryWrapper<BlogTag>().lambda().in(BlogTag::getTagId, tagIds));
@@ -242,9 +255,11 @@ public class MyBlogController {
         List<String> headerImgs = new ArrayList<>();
         String headerImgDir = "src/main/resources/static/blog/amaze/images/headers";
         File[] headerImgFiles = new File(headerImgDir).listFiles();
-        for (File headerImgFile : headerImgFiles) {
+        for (File headerImgFile : headerImgFiles)
+        {
             String photoName = headerImgFile.getName();
-            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$")) {
+            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$"))
+            {
                 headerImgs.add(photoName);
             }
         }
@@ -264,7 +279,8 @@ public class MyBlogController {
      */
     @GetMapping("/blog/listComment")
     @ResponseBody
-    public AjaxResultPage<BlogComment> listComment(AjaxPutPage<BlogComment> ajaxPutPage, Integer blogId) {
+    public AjaxResultPage<BlogComment> listComment(AjaxPutPage<BlogComment> ajaxPutPage, Integer blogId)
+    {
         Page<BlogComment> page = ajaxPutPage.putPageToPage();
         blogCommentService.page(page, new QueryWrapper<BlogComment>()
                 .lambda()
@@ -286,7 +302,8 @@ public class MyBlogController {
      * @date 2019/9/6 17:26
      */
     @GetMapping({"/link"})
-    public String link(HttpServletRequest request) {
+    public String link(HttpServletRequest request)
+    {
         request.setAttribute("pageName", "友情链接");
         List<BlogLink> favoriteLinks = blogLinkService.list(new QueryWrapper<BlogLink>()
                 .lambda().eq(BlogLink::getLinkType, LinkConstants.LINK_TYPE_FRIENDSHIP.getLinkTypeId())
@@ -307,9 +324,11 @@ public class MyBlogController {
         List<String> headerImgs = new ArrayList<>();
         String headerImgDir = "src/main/resources/static/blog/amaze/images/headers";
         File[] headerImgFiles = new File(headerImgDir).listFiles();
-        for (File headerImgFile : headerImgFiles) {
+        for (File headerImgFile : headerImgFiles)
+        {
             String photoName = headerImgFile.getName();
-            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$")) {
+            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$"))
+            {
                 headerImgs.add(photoName);
             }
         }
@@ -328,20 +347,71 @@ public class MyBlogController {
     @PostMapping(value = "/blog/comment")
     @ResponseBody
     public Result<String> comment(HttpServletRequest request,
-                                  @Validated BlogComment blogComment) {
+                                  @Validated BlogComment blogComment)
+    {
         String ref = request.getHeader("Referer");
         // 对非法字符进行转义，防止xss漏洞
         blogComment.setCommentBody(StringEscapeUtils.escapeHtml4(blogComment.getCommentBody()));
-        if (StringUtils.isEmpty(ref)) {
+        if (StringUtils.isEmpty(ref))
+        {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "非法请求");
         }
         boolean flag = blogCommentService.save(blogComment);
-        if (flag) {
+        if (flag)
+        {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
 
+
+    @PostMapping("/blog/like")
+    @ResponseBody
+    public Result<String> like(@RequestBody Map<String, Object> params)
+    {
+        if (params == null || params.isEmpty() || !params.containsKey("liked") || !params.containsKey("blogId") || !params.containsKey("likeNum"))
+        {
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
+        }
+        boolean liked = false;
+        try {
+            liked = Boolean.parseBoolean(params.get("liked").toString());
+        } catch (Exception e) {
+            // 处理字符串转换为boolean类型时的异常
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
+        }
+
+        Long blogId = null;
+        try {
+            blogId = Long.parseLong(params.get("blogId").toString());
+        } catch (Exception e) {
+            // 处理字符串转换为Long类型时的异常
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
+        }
+
+        Long likeNum = null;
+        try {
+            likeNum = Long.parseLong(params.get("likeNum").toString());
+        } catch (Exception e) {
+            // 处理字符串转换为Long类型时的异常
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
+        }
+
+        if (!liked)
+        {
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
+        }
+
+        BlogInfo blogInfo = new BlogInfo()
+                .setBlogId(blogId)
+                .setBlogLikeCount(likeNum);
+        boolean flag = blogInfoService.saveOrUpdate(blogInfo);
+        if (flag)
+        {
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+        }
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
+    }
 
 
 }

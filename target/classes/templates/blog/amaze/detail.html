@@ -53,6 +53,7 @@
                                 <a href="#comments" class="article-comments"><th:block
                                         th:text="${blogDetailVO.commentCount}"></th:block>条评论</a> &nbsp;
                                 <th:block th:text="${blogDetailVO.blogViews}"></th:block>浏览
+                                <th:block th:text="${blogDetailVO.blogLikeCount}"></th:block>点赞
                             </div>
                             </span>
                     <div class="tags post-tags">
@@ -70,6 +71,9 @@
 <div class="container">
     <div class="am-g am-g-fixed blog-fixed">
         <div class="am-u-lg-12 am-u-sm-12">
+            <div style="text-align: right;padding-right: 30px">
+                <i id="likeBtn" class="layui-icon layui-icon-praise" style="font-size: 30px; color: #1E9FFF;" lay-on="test-tips-top" th:text="${blogDetailVO.blogLikeCount}"></i>
+            </div>
             <article id="test-markdown-view">
                 <!--                <textarea th:utext="${blogDetailVO.blogContent}"/>-->
             </article>
@@ -265,5 +269,71 @@
             });
         });
     }();
+
+    // 获取点赞按钮元素
+    const likeBtn = document.getElementById('likeBtn');
+
+    // 设置点赞状态的本地存储键名
+    const likeKey = 'myAppLikeStatus';
+
+    // 检查设备是否已经点过赞
+    if (localStorage.getItem(likeKey)) {
+        // 如果已经点过赞，禁用点赞按钮
+        likeBtn.style.pointerEvents = 'none';
+        likeBtn.style.opacity = '0.4';
+    }
+
+    // 点击点赞按钮时触发
+    likeBtn.addEventListener('click', () => {
+        // 获取当前点赞数量
+        var likeCount = parseInt(likeBtn.innerText);
+
+        // 增加点赞数量
+        likeCount+=1;
+        likeBtn.innerText = likeCount;
+
+        // 禁用点赞按钮
+        likeBtn.style.pointerEvents = 'none';
+        likeBtn.style.opacity = '0.5';
+
+        // 保存点赞状态到本地存储
+        localStorage.setItem(likeKey, true);
+
+        $.ajax({
+            url: '/blog/like',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                liked: true,
+                blogId: [[${blogDetailVO.blogId}]],
+                likeNum: likeCount,
+                // 其他需要传递的数据
+            }),
+
+            success: function (result) {
+                if (result.resultCode === 200) {
+                    //layer.alert("感谢支持~",{icon: 6})
+                    layer.tips('感谢支持~', '#likeBtn', {
+                        tips: [1, '#1e9fff']
+                    });
+
+                }
+                else {
+                    //layer.alert(result.message,{icon: 5})
+                    layer.tips(result.message, '#likeBtn', {
+                        tips: [1, '#Ea6161']
+                    });
+                }
+            },
+            error: function () {
+                //layer.alert("操作失败",{icon: 5})
+                layer.tips("操作失败", '#likeBtn', {
+                    tips: [1, '#Ea6161']
+                });
+
+            }
+        });
+    });
+
 </script>
 </html>
