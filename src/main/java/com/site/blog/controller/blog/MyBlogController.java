@@ -156,7 +156,7 @@ public class MyBlogController
                 .eq(Objects.nonNull(condition.getCategoryName()), BlogInfo::getBlogCategoryName, condition.getCategoryName())
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
                 .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
-                .eq(BlogInfo::getIsHidden, HiddenStatusEnum.NO_DELETED.getStatus());
+                .eq(BlogInfo::getIsHidden, HiddenStatusEnum.NO_HIDDEN.getStatus());
         if (Objects.nonNull(condition.getTagId()))
         {
             List<BlogTagRelation> list = blogTagRelationService.list(new QueryWrapper<BlogTagRelation>()

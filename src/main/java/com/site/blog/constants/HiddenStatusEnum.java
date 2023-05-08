@@ -12,11 +12,11 @@ public enum HiddenStatusEnum {
     /**
      * 隐藏
      */
-    DELETED(1, "隐藏"),
+    HIDDEN(1, "隐藏"),
     /**
      * 显示/未隐藏
      */
-    NO_DELETED(0, "显示");
+    NO_HIDDEN(0, "显示");
 
     private final int status;
     private final String note;

@@ -44,6 +44,12 @@ private static final long serialVersionUID=1L;
     private Integer isDeleted;
 
     /**
+     * 是否隐藏 0=否 1=是
+     */
+    @TableField("is_hidden")
+    private Integer isHidden;
+
+    /**
      * 创建时间
      */
     @TableField("create_time")

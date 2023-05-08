@@ -3,6 +3,7 @@ package com.site.blog.controller.admin;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.site.blog.constants.DeleteStatusEnum;
+import com.site.blog.constants.HiddenStatusEnum;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.entity.BlogTag;
 import com.site.blog.pojo.dto.AjaxPutPage;
@@ -50,7 +51,8 @@ public class TagController {
     @GetMapping("/v1/tags/list")
     public Result<List<BlogTag>> tagsList(){
         QueryWrapper<BlogTag> queryWrapper = new QueryWrapper<BlogTag>();
-        queryWrapper.lambda().eq(BlogTag::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+        queryWrapper.lambda().eq(BlogTag::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
+                .eq(BlogTag::getIsHidden, HiddenStatusEnum.NO_HIDDEN.getStatus());;
         List<BlogTag> list = blogTagService.list(queryWrapper);
         if (CollectionUtils.isEmpty(list)){
             ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
