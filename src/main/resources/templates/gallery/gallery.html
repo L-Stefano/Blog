@@ -65,6 +65,23 @@
 
 <div class="am-g am-g-fixed blog-fixed">
     <div class="am-u-lg-8 am-u-sm-12">
+
+        <fieldset class="layui-elem-field">
+            <legend>作者介绍</legend>
+            <div class="layui-field-box">
+                <p style="text-indent:2em">我是Stefano，一个充满好奇心和创造力的年轻人。计算机技术是我擅长的领域，我时刻关注着最新的技术趋势和前沿，不断探索新的技术应用和解决方案。我喜欢将自己所学所得与他人分享，与他人交流和讨论技术问题，以期提供更多帮助和启发。</p>
+
+                <p style="text-indent:2em">除了技术，我还热衷于创作音乐。从初中开始，我就踏上了独立音乐创作之路。我喜欢借音乐来表达我的情感和思想的方式，每一首作品都充满着我自己的特色和风格。对我而言，音乐是我生活中不可或缺的一部分。如果你感兴趣，可以访问我的<a href="https://music.163.com/artist/album?id=1185058" target="_blank" style="text-decoration: underline;">网易云音乐主页</a>。</p>
+
+                <p style="text-indent:2em">我的闲暇时间不全是投入在音乐中，玩游戏也是我放松和娱乐的方式之一。我热爱“硬核”游戏，享受胜利的快感，也能够锻炼我的思考能力和决策能力。</p>
+
+                <p style="text-indent:2em">我的职业和人生中，我希望将我热爱的事物和我的技能结合起来，带来更多的创新和美好。无论是在技术领域还是音乐创作方面，我定会追求卓越！</p>
+            </div>
+        </fieldset>
+
+
+
+
         <section>
             <div class="sidebar-header">
                 <span class="sidebar-header-title">
@@ -74,9 +91,10 @@
             <div>
                 <div class="layui-panel">
                     <div style="padding: 32px;display: block;text-align: center;">
-                        <img class="enlarge" src="gallery/photos/flows.jpg">
-                        <img class="enlarge" src="gallery/photos/flows.jpg">
-                        <img class="enlarge" src="gallery/photos/flows.jpg">
+<!--                        <img class="enlarge" src="gallery/photos/flows.jpg">-->
+<!--                        <img class="enlarge" src="gallery/photos/flows.jpg">-->
+<!--                        <img class="enlarge" src="gallery/photos/flows.jpg">-->
+                        <div id="gallery"></div>
                     </div>
                 </div>
             </div>
@@ -99,6 +117,9 @@
                     <p>由作者精心挑选的10首最满意的音乐作品，请欣赏：</p>
                     <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=340 height=450
                             src="//music.163.com/outchain/player?type=0&id=8405948278&auto=1&height=430"></iframe>
+                    <hr class="layui-border-black">
+                    <p>影视配乐练习作品：</p>
+                    <iframe width=400 height=169 src="//player.bilibili.com/player.html?aid=430914163&bvid=BV1SG411g7nj&cid=843251207&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
                 </div>
             </section>
 
@@ -121,77 +142,48 @@
 <script th:src="@{/blog/plugins/comment/valid.js}"></script>
 <script th:src="@{/X-admin/lib/layui/layui.all.js}"></script>
 <script th:src="@{/X-admin/lib/layui/js/layui.js}"></script>
-<!--<script th:inline="javascript">-->
-<!--    layui.use(function () {-->
-<!--        var flow = layui.flow;-->
-<!--        var revisionInfoList = [[${revisionInfoList}]];-->
-<!--        var pageSingleSize = [[${pageSingleSize}]];-->
-<!--        var pageTotalSize = Math.ceil(revisionInfoList.length / pageSingleSize); // 计算总页数-->
 
-<!--        flow.load({-->
-<!--            elem: '#revision-flow',-->
-<!--            isAuto: true,-->
-
-<!--            done: function (page, next) {-->
-<!--                setTimeout(function () {-->
-<!--                    var start = (page - 1) * pageSingleSize; // 计算当前页数据的起始下标-->
-<!--                    var end = start + pageSingleSize; // 计算当前页数据的结束下标-->
-<!--                    var pageData = revisionInfoList.slice(start, end); // 获取当前页数据-->
-<!--                    var lis = [];-->
-<!--                    for (var i = 0; i < pageData.length; i++) {-->
-<!--                        var datetime = pageData[i].revisionDatetime;-->
-<!--                        lis.push(-->
-<!--                            '<div style="padding: 32px;">',-->
-<!--                            '  <fieldset class="layui-elem-field layui-field-title">',-->
-<!--                            '    <legend>' + datetime + '</legend>',-->
-<!--                            '  </fieldset>',-->
-<!--                            '  <article id="test-markdown-view' + (start + i + 1) + '"></article>',-->
-<!--                            '</div>'-->
-<!--                        );-->
-<!--                    }-->
-<!--                    next(lis.join(''), page < pageTotalSize);-->
-<!--                    // 在next回调之后再填充article内容-->
-<!--                    // 这样才能确保所有的 DOM 元素都已经被添加到了文档中-->
-<!--                    for (var i = 0; i < pageSingleSize; i++) {-->
-<!--                        var content = revisionInfoList[start + i].revisionContent;-->
-<!--                        editormd.markdownToHTML("test-markdown-view" + (start + i + 1), {-->
-<!--                            htmlDecode: "style,script,iframe",-->
-<!--                            emoji: true,-->
-<!--                            taskList: true,-->
-<!--                            tex: true,-->
-<!--                            flowChart: true,-->
-<!--                            sequenceDiagram: true,-->
-<!--                            markdown: content-->
-<!--                        });-->
-<!--                    }-->
-<!--                }, 520);-->
-<!--            }-->
-<!--        });-->
-<!--    });-->
-<!--</script>-->
 
 <script>
-    $('.enlarge').click(function () {
-        //获取图片路径
-        var imgsrc = $(this).attr("src");
-        var opacityBottom = '<div class="opacityBottom" style = "display:none"><img class="bigImg" src="' + imgsrc + '"></div>';
-        $(document.body).append(opacityBottom);
-        toBigImg();//变大函数
+    $(document).ready(function() {
+        var galleryDiv = $('#gallery');
+
+        //单击图片放大
+        function toBigImg() {
+            $(".opacityBottom").addClass("opacityBottom");//添加遮罩层
+            $(".opacityBottom").show();
+            $("html,body").addClass("none-scroll");//下层不可滑动
+            $(".bigImg").addClass("bigImg");//添加图片样式
+            $(".opacityBottom").click(function () {//点击关闭
+                $("html,body").removeClass("none-scroll");
+                $(".opacityBottom").remove();
+            });
+        }
+
+        //请求后端获取图片列表
+        function getPhotoList() {
+            $.ajax({
+                url: 'gallery/photos',
+                dataType: 'json',
+                success: function(data) {
+                    $.each(data, function(i, val) {
+                        var img = $('<img>').attr('src', 'gallery/photos/' + val).addClass('enlarge');
+                        galleryDiv.append(img);
+                    });
+
+                    $('.enlarge').click(function () {
+                        //获取图片路径
+                        var imgsrc = $(this).attr("src");
+                        var opacityBottom = '<div class="opacityBottom" style = "display:none"><img class="bigImg" src="' + imgsrc + '"></div>';
+                        $(document.body).append(opacityBottom);
+                        toBigImg();
+                    });
+                }
+            });
+        }
+
+        getPhotoList();
     });
-
-    function toBigImg() {
-        $(".opacityBottom").addClass("opacityBottom");//添加遮罩层
-        $(".opacityBottom").show();
-        $("html,body").addClass("none-scroll");//下层不可滑动
-        $(".bigImg").addClass("bigImg");//添加图片样式
-        $(".opacityBottom").click(function () {//点击关闭
-            $("html,body").removeClass("none-scroll");
-            $(".opacityBottom").remove();
-        });
-    }
-
-
-
 </script>
 </body>
 </html>
