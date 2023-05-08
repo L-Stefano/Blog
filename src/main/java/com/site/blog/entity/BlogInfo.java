@@ -118,4 +118,8 @@ public class BlogInfo implements Serializable {
     @TableField("is_hidden")
     private Integer isHidden;
 
+    @TableField("blog_like_count")
+    private Long blogLikeCount;
+
+
 }

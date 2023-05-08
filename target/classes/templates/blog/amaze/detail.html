@@ -36,7 +36,7 @@
 <body>
 <div th:replace="blog/amaze/header::nav-fragment"></div>
 <header th:fragment="header-fragment" class="intro-header"
-        th:style="'background-image:url(' + @{/blog/amaze/images/header.jpg} + ');' + '-webkit-mask: no-repeat center / contain;
+        th:style="'background-image:url(' + @{/blog/amaze/images/headers/} + ${headerImg} + ');' + '-webkit-mask: no-repeat center / contain;
     -webkit-mask: no-repeat center / contain;
     -webkit-mask-image: url(/blog/amaze/images/wave.svg);
     -webkit-mask-size: cover;

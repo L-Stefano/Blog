@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -46,6 +48,20 @@ public class RevisionController
         request.setAttribute("pageSingleSize",pageSingleSize);//每页显示数
         request.setAttribute("configurations", blogConfigService.getAllConfigs());
         request.setAttribute("pageName", "更新历史");
+
+        //随机选择一个头图，传递给前端
+        List<String> headerImgs = new ArrayList<>();
+        String headerImgDir = "src/main/resources/static/blog/amaze/images/headers";
+        File[] headerImgFiles = new File(headerImgDir).listFiles();
+        for (File headerImgFile : headerImgFiles) {
+            String photoName = headerImgFile.getName();
+            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$")) {
+                headerImgs.add(photoName);
+            }
+        }
+        int headerImgIndex = (int) (Math.random() * headerImgs.size());
+        request.setAttribute("headerImg", headerImgs.get(headerImgIndex));
+
         return "revisions/revisions.html";
     }
 }

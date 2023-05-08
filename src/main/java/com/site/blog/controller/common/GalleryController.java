@@ -22,6 +22,20 @@ public class GalleryController
 
         request.setAttribute("configurations", blogConfigService.getAllConfigs());
         request.setAttribute("pageName", "作品集");
+
+        //随机选择一个头图，传递给前端
+        List<String> headerImgs = new ArrayList<>();
+        String headerImgDir = "src/main/resources/static/blog/amaze/images/headers";
+        File[] headerImgFiles = new File(headerImgDir).listFiles();
+        for (File headerImgFile : headerImgFiles) {
+            String photoName = headerImgFile.getName();
+            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$")) {
+                headerImgs.add(photoName);
+            }
+        }
+        int headerImgIndex = (int) (Math.random() * headerImgs.size());
+        request.setAttribute("headerImg", headerImgs.get(headerImgIndex));
+
         return "gallery/gallery";
     }
 

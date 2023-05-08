@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -177,6 +178,20 @@ public class MyBlogController {
         request.setAttribute("hotBlogs", blogInfoService.getHotBlog());
         request.setAttribute("hotTags", blogTagService.getBlogTagCountForIndex());
         request.setAttribute("configurations", blogConfigService.getAllConfigs());
+
+        //随机选择一个头图，传递给前端
+        List<String> headerImgs = new ArrayList<>();
+        String headerImgDir = "src/main/resources/static/blog/amaze/images/headers";
+        File[] headerImgFiles = new File(headerImgDir).listFiles();
+        for (File headerImgFile : headerImgFiles) {
+            String photoName = headerImgFile.getName();
+            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$")) {
+                headerImgs.add(photoName);
+            }
+        }
+        int headerImgIndex = (int) (Math.random() * headerImgs.size());
+        request.setAttribute("headerImg", headerImgs.get(headerImgIndex));
+
         return "blog/" + theme + "/index";
     }
 
@@ -222,6 +237,20 @@ public class MyBlogController {
         request.setAttribute("tagList", tagList);
         request.setAttribute("pageName", "详情");
         request.setAttribute("configurations", blogConfigService.getAllConfigs());
+
+        //随机选择一个头图，传递给前端
+        List<String> headerImgs = new ArrayList<>();
+        String headerImgDir = "src/main/resources/static/blog/amaze/images/headers";
+        File[] headerImgFiles = new File(headerImgDir).listFiles();
+        for (File headerImgFile : headerImgFiles) {
+            String photoName = headerImgFile.getName();
+            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$")) {
+                headerImgs.add(photoName);
+            }
+        }
+        int headerImgIndex = (int) (Math.random() * headerImgs.size());
+        request.setAttribute("headerImg", headerImgs.get(headerImgIndex));
+
         return "blog/" + theme + "/detail";
     }
 
@@ -273,6 +302,20 @@ public class MyBlogController {
         request.setAttribute("recommendLinks", recommendLinks);
         request.setAttribute("personalLinks", personalLinks);
         request.setAttribute("configurations", blogConfigService.getAllConfigs());
+
+        //随机选择一个头图，传递给前端
+        List<String> headerImgs = new ArrayList<>();
+        String headerImgDir = "src/main/resources/static/blog/amaze/images/headers";
+        File[] headerImgFiles = new File(headerImgDir).listFiles();
+        for (File headerImgFile : headerImgFiles) {
+            String photoName = headerImgFile.getName();
+            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$")) {
+                headerImgs.add(photoName);
+            }
+        }
+        int headerImgIndex = (int) (Math.random() * headerImgs.size());
+        request.setAttribute("headerImg", headerImgs.get(headerImgIndex));
+
         return "blog/" + theme + "/link";
     }
 
