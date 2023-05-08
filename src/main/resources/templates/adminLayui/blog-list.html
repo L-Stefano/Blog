@@ -71,6 +71,15 @@
            lay-skin="switch" value="{{d.blogId}}" lay-text="不允许评论|允许评论">
     {{#  } }}
 </script>
+<script type="text/html" id="blogHiddenController">
+    {{#  if(d.isHidden == 1){ }}
+    <input type="checkbox" name="blogHidden" lay-filter="blogHidden"
+           lay-skin="switch" value="{{d.blogId}}" lay-text="显示|隐藏" checked>
+    {{#  } else { }}
+    <input type="checkbox" name="blogHidden" lay-filter="blogHidden"
+           lay-skin="switch" value="{{d.blogId}}" lay-text="显示|隐藏">
+    {{#  } }}
+</script>
 <script type="text/html" id="blogListBar">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     {{#  if(d.isDeleted == 1){ }}
@@ -130,6 +139,13 @@
                     unresize: "true",
                     templet: '#enableCommentTool'
                 },
+                {
+                        field: 'isHidden',
+                        title: '隐藏文章',
+                        align: 'center',
+                        unresize: "true",
+                        templet: '#blogHiddenController'
+                },
                 {title: '操作', align: "center", width: "18%", unresize: "true", toolbar: "#blogListBar"}]
             ]
         });
@@ -175,6 +191,22 @@
                 {
                     "blogId": data.value,
                     "enableComment": enableComment
+                }, function (s) {
+                    setTimeout(function () {
+                        top.layer.close(index);
+                        form.render('select', 'blogStatus');
+                        top.layer.msg(s.message);
+                    }, 500);
+                });
+        });
+
+        form.on('switch(blogHidden)', function (data) {
+            var blogHidden = data.elem.checked ? 1 : 0; //1为隐藏,0为显示
+            var index = top.layer.msg('数据提交中，请稍候', {icon: 16, time: false, shade: 0.8});
+            $.post("/admin/v1/blog/blogStatus",
+                {
+                    "blogId": data.value,
+                    "isHidden": blogHidden
                 }, function (s) {
                     setTimeout(function () {
                         top.layer.close(index);

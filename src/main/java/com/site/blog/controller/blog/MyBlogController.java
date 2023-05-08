@@ -130,11 +130,11 @@ public class MyBlogController {
 
     /**
      * 博客分页
-     *
+     * Stefano：新增isHidden判断
      * @param request
      * @param condition
      * @throws
-     * @author Linn-cn
+     * @author Linn-cn + Stefano
      * @date 2020/12/7
      */
     @GetMapping({"/page"})
@@ -150,7 +150,8 @@ public class MyBlogController {
                 .like(Objects.nonNull(condition.getKeyword()), BlogInfo::getBlogTitle, condition.getKeyword())
                 .eq(Objects.nonNull(condition.getCategoryName()), BlogInfo::getBlogCategoryName, condition.getCategoryName())
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
-                .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+                .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
+                .eq(BlogInfo::getIsHidden, HiddenStatusEnum.NO_DELETED.getStatus());
         if (Objects.nonNull(condition.getTagId())) {
             List<BlogTagRelation> list = blogTagRelationService.list(new QueryWrapper<BlogTagRelation>()
                     .lambda().eq(BlogTagRelation::getTagId, condition.getTagId()));

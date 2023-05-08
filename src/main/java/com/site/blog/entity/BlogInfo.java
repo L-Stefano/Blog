@@ -112,5 +112,10 @@ public class BlogInfo implements Serializable {
     @TableField("update_time")
     private Date updateTime;
 
+    /**
+     * 是否隐藏文章
+     */
+    @TableField("is_hidden")
+    private Integer isHidden;
 
 }
