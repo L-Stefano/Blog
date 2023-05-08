@@ -58,6 +58,9 @@ spring:
     encoding: UTF-8
     servlet:
       content-type: text/html
+  mvc:
+    favicon:
+      enabled: false
 
 mybatis-plus:
   type-aliases-package: com.site.blog.entity
