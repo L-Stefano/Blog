@@ -106,5 +106,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <finalName>BlogServer</finalName>
     </build>
 </project>
