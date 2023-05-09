@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="shortcut icon" th:href="@{${configurations.get('websiteIcon')}}"/>
+<link rel="bookmark" th:href="@{${configurations.get('websiteIcon')}}"/>
 <head th:replace="blog/amaze/header::head-fragment"></head>
 <body id="blog">
 <div th:replace="blog/amaze/header::nav-fragment"></div>

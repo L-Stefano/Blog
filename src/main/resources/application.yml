@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+#  profiles:
+#    active: prod
   datasource:
     name: myDemo
     url: jdbc:mysql://localhost:3306/myDemo?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false
@@ -61,6 +63,8 @@ spring:
   mvc:
     favicon:
       enabled: false
+
+
 
 mybatis-plus:
   type-aliases-package: com.site.blog.entity
