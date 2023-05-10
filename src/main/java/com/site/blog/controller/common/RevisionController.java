@@ -1,18 +1,21 @@
 package com.site.blog.controller.common;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.site.blog.entity.RevisionInfo;
 import com.site.blog.service.BlogConfigService;
 import com.site.blog.service.RevisionInfoService;
-import com.site.blog.service.impl.BlogConfigServiceImpl;
-import com.site.blog.service.impl.RevisionInfoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +23,8 @@ import java.util.List;
 public class RevisionController
 {
 
+    @Autowired
+    ResourcePatternResolver resourcePatternResolver;
     @Autowired
     BlogConfigService blogConfigService;
     @Autowired
@@ -33,7 +38,7 @@ public class RevisionController
      * @return
      */
     @GetMapping({"/revisions"})
-    public String historicalRevisions(HttpServletRequest request)
+    public String historicalRevisions(HttpServletRequest request) throws IOException
     {
         //获取所有版本记录
         QueryWrapper<RevisionInfo> queryWrapper = new QueryWrapper<>();
@@ -49,16 +54,17 @@ public class RevisionController
         request.setAttribute("configurations", blogConfigService.getAllConfigs());
         request.setAttribute("pageName", "更新历史");
 
-        //随机选择一个头图，传递给前端
-        List<String> headerImgs = new ArrayList<>();
-        String headerImgDir = "src/main/resources/static/blog/amaze/images/headers";
-        File[] headerImgFiles = new File(headerImgDir).listFiles();
-        for (File headerImgFile : headerImgFiles) {
-            String photoName = headerImgFile.getName();
-            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$")) {
-                headerImgs.add(photoName);
-            }
-        }
+		List<String> headerImgs = new ArrayList<>();
+		try {
+			Resource[] resources = resourcePatternResolver.getResources("classpath:/static/blog/amaze/images/headers/*.{jpg,jpeg,png,gif}");
+			for (Resource resource : resources) {
+				if (resource.isReadable()) {
+					headerImgs.add(resource.getFilename());
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         int headerImgIndex = (int) (Math.random() * headerImgs.size());
         request.setAttribute("headerImg", headerImgs.get(headerImgIndex));
 

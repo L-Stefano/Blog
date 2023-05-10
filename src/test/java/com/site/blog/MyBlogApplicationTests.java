@@ -1,17 +1,19 @@
 package com.site.blog;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.site.blog.controller.common.GalleryController;
-import com.site.blog.entity.RevisionInfo;
 import com.site.blog.service.RevisionInfoService;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +23,14 @@ public class MyBlogApplicationTests {
 
 	@Autowired
 	RevisionInfoService revisionInfoService;
+	@Autowired
+	ResourcePatternResolver resourcePatternResolver;
+	@Autowired
+	private ResourceLoader resourceLoader;
 
 	@Test
-	public void contextLoads() {
+	public void contextLoads() throws IOException
+	{
 
 	}
 

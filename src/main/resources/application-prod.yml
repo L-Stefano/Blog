@@ -1,3 +1,7 @@
+# 打印日志：docker logs -f --tail=100 myblog
+# 运行：sudo docker run --add-host=host.docker.internal:host-gateway -d -p 80:80 --name myblog  blog:1.1.0
+# 构建：sudo docker build . -t blog:1.1.0
+
 server:
   port: 80
 

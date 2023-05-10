@@ -18,6 +18,9 @@ import com.site.blog.util.ResultGenerator;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -25,8 +28,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -37,10 +46,14 @@ import java.util.stream.Collectors;
  * @date 2020/12/7
  */
 @Controller
+@RequestMapping("/")
 public class MyBlogController
 {
 
     public static String theme = "amaze";
+
+    @Autowired
+    ResourcePatternResolver resourcePatternResolver;
 
     @Autowired
     private BlogInfoService blogInfoService;
@@ -68,7 +81,7 @@ public class MyBlogController
      * @date 2020/12/7
      */
     @GetMapping({"/", "/index", "index.html"})
-    public String index(HttpServletRequest request)
+    public String index(HttpServletRequest request) throws IOException
     {
         return this.page(request, new BlogPageCondition()
                 .setPageNum(1)
@@ -85,7 +98,7 @@ public class MyBlogController
      * @date 2020/12/7
      */
     @GetMapping({"/category/{categoryName}"})
-    public String category(HttpServletRequest request, @PathVariable("categoryName") String categoryName)
+    public String category(HttpServletRequest request, @PathVariable("categoryName") String categoryName) throws IOException
     {
         return this.page(request, new BlogPageCondition()
                 .setPageNum(1)
@@ -102,7 +115,7 @@ public class MyBlogController
      * @date 2019/9/6 7:03
      */
     @GetMapping({"/search/{keyword}"})
-    public String search(HttpServletRequest request, @PathVariable("keyword") String keyword)
+    public String search(HttpServletRequest request, @PathVariable("keyword") String keyword) throws IOException
     {
         return this.page(request, new BlogPageCondition()
                 .setPageNum(1)
@@ -120,7 +133,7 @@ public class MyBlogController
      * @date 2019/9/6 7:04
      */
     @GetMapping({"/tag/{tagId}"})
-    public String tag(HttpServletRequest request, @PathVariable("tagId") String tagId)
+    public String tag(HttpServletRequest request, @PathVariable("tagId") String tagId) throws IOException
     {
         return this.page(request, new BlogPageCondition()
                 .setPageNum(1)
@@ -140,7 +153,7 @@ public class MyBlogController
      * @date 2020/12/7
      */
     @GetMapping({"/page"})
-    public String page(HttpServletRequest request, BlogPageCondition condition)
+    public String page(HttpServletRequest request, BlogPageCondition condition) throws IOException
     {
         if (Objects.isNull(condition.getPageNum()))
         {
@@ -189,17 +202,17 @@ public class MyBlogController
         request.setAttribute("configurations", blogConfigService.getAllConfigs());
 
         //随机选择一个头图，传递给前端
-        List<String> headerImgs = new ArrayList<>();
-        String headerImgDir = "src/main/resources/static/blog/amaze/images/headers";
-        File[] headerImgFiles = new File(headerImgDir).listFiles();
-        for (File headerImgFile : headerImgFiles)
-        {
-            String photoName = headerImgFile.getName();
-            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$"))
-            {
-                headerImgs.add(photoName);
-            }
-        }
+		List<String> headerImgs = new ArrayList<>();
+		try {
+			Resource[] resources = resourcePatternResolver.getResources("classpath:/static/blog/amaze/images/headers/*.{jpg,jpeg,png,gif}");
+			for (Resource resource : resources) {
+				if (resource.isReadable()) {
+					headerImgs.add(resource.getFilename());
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         int headerImgIndex = (int) (Math.random() * headerImgs.size());
         request.setAttribute("headerImg", headerImgs.get(headerImgIndex));
 
@@ -215,7 +228,7 @@ public class MyBlogController
      * @date 2019/9/6 13:09
      */
     @GetMapping({"/blog/{blogId}", "/article/{blogId}"})
-    public String detail(HttpServletRequest request, @PathVariable("blogId") Long blogId)
+    public String detail(HttpServletRequest request, @PathVariable("blogId") Long blogId) throws IOException
     {
         // 获得文章info
         BlogInfo blogInfo = blogInfoService.getById(blogId);
@@ -252,17 +265,17 @@ public class MyBlogController
         request.setAttribute("configurations", blogConfigService.getAllConfigs());
 
         //随机选择一个头图，传递给前端
-        List<String> headerImgs = new ArrayList<>();
-        String headerImgDir = "src/main/resources/static/blog/amaze/images/headers";
-        File[] headerImgFiles = new File(headerImgDir).listFiles();
-        for (File headerImgFile : headerImgFiles)
-        {
-            String photoName = headerImgFile.getName();
-            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$"))
-            {
-                headerImgs.add(photoName);
-            }
-        }
+		List<String> headerImgs = new ArrayList<>();
+		try {
+			Resource[] resources = resourcePatternResolver.getResources("classpath:/static/blog/amaze/images/headers/*.{jpg,jpeg,png,gif}");
+			for (Resource resource : resources) {
+				if (resource.isReadable()) {
+					headerImgs.add(resource.getFilename());
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         int headerImgIndex = (int) (Math.random() * headerImgs.size());
         request.setAttribute("headerImg", headerImgs.get(headerImgIndex));
 
@@ -302,7 +315,7 @@ public class MyBlogController
      * @date 2019/9/6 17:26
      */
     @GetMapping({"/link"})
-    public String link(HttpServletRequest request)
+    public String link(HttpServletRequest request) throws IOException
     {
         request.setAttribute("pageName", "友情链接");
         List<BlogLink> favoriteLinks = blogLinkService.list(new QueryWrapper<BlogLink>()
@@ -321,17 +334,17 @@ public class MyBlogController
         request.setAttribute("configurations", blogConfigService.getAllConfigs());
 
         //随机选择一个头图，传递给前端
-        List<String> headerImgs = new ArrayList<>();
-        String headerImgDir = "src/main/resources/static/blog/amaze/images/headers";
-        File[] headerImgFiles = new File(headerImgDir).listFiles();
-        for (File headerImgFile : headerImgFiles)
-        {
-            String photoName = headerImgFile.getName();
-            if (headerImgFile.isFile() && photoName.matches(".*\\.(jpe?g|png|gif)$"))
-            {
-                headerImgs.add(photoName);
-            }
-        }
+		List<String> headerImgs = new ArrayList<>();
+		try {
+			Resource[] resources = resourcePatternResolver.getResources("classpath:/static/blog/amaze/images/headers/*.{jpg,jpeg,png,gif}");
+			for (Resource resource : resources) {
+				if (resource.isReadable()) {
+					headerImgs.add(resource.getFilename());
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         int headerImgIndex = (int) (Math.random() * headerImgs.size());
         request.setAttribute("headerImg", headerImgs.get(headerImgIndex));
 
@@ -374,25 +387,31 @@ public class MyBlogController
             return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         }
         boolean liked = false;
-        try {
+        try
+        {
             liked = Boolean.parseBoolean(params.get("liked").toString());
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             // 处理字符串转换为boolean类型时的异常
             return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         }
 
         Long blogId = null;
-        try {
+        try
+        {
             blogId = Long.parseLong(params.get("blogId").toString());
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             // 处理字符串转换为Long类型时的异常
             return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         }
 
         Long likeNum = null;
-        try {
+        try
+        {
             likeNum = Long.parseLong(params.get("likeNum").toString());
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             // 处理字符串转换为Long类型时的异常
             return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         }
